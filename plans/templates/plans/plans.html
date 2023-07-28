@@ -1,0 +1,26 @@
+{% extends 'owner_dashboard.html' %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'plans/css/plans.css' %}">
+{% endblock %}
+{% block title %}خرید اشتراک{% endblock %}
+{% block body %}
+    <div class="background">
+        <div class="container">
+            <div class="panel pricing-table">
+                {% for p in plans %}
+                    <div class="pricing-plan">
+                        <img src="{{ p.image.url }}" alt="" class="pricing-img">
+                        <h2 class="pricing-header">{{ p.name }}</h2>
+                        <ul class="pricing-features">
+                            <li class="pricing-features-item">{{ p.d_1 }}</li>
+                            <li class="pricing-features-item">{{ p.d_2 }}</li>
+                        </ul>
+                        <span class="pricing-price">{{ p.price }}<span style="font-size: 12px">تومان</span></span>
+                        <a href="{% url 'plans:by_plans' p.id %}" class="pricing-button">خرید</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

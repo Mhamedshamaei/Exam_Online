@@ -1,0 +1,41 @@
+{% extends 'teacher_dashboard.html' %}
+{% load static %}
+{% block title %}حساب کاربری{% endblock %}
+{% block body %}
+    <div class="row d-flex justify-content-center">
+        <div class="d-flex justify-content-center">
+            <div class="rounded-circle mt-3" style="width: 150px;height: 150px;z-index: 1000;
+                    overflow: hidden;background-image: url({% static 'images/teacher_acatar.jpg' %}); background-size: cover;background-position: center">
+            </div>
+        </div>
+        <div class="user_information shadow bg-white mt-0 rounded" style="width: 92%;transform: translateY(-40px)">
+            <div class="row my-3 mt-5">
+                {% csrf_token %}
+                <div class="col-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com"
+                               name="first_name" value="{{ teacher.teacher_profile.first_name }}">
+                        <label for="floatingInput">نام</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" minlength="11"
+                               placeholder="name@example.com" name="phone" value="{{ teacher.phone }}">
+                        <label for="floatingInput">شماره موبایل</label>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com"
+                               name="last_name" value="{{ teacher.teacher_profile.last_name }}">
+                        <label for="floatingInput">نام خوانوادگی</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com"
+                               name="national_code" value="{{ teacher.national_code }}">
+                        <label for="floatingInput">کد ملی</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends 'teacher_dashboard.html' %}
+{% load static %}
+{% block title %}مدیریت آزمون ها{% endblock %}
+{% block body %}
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" action="{% url 'exam:create' %}" class="modal-content">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">ساخت آزمون جدید</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">نام آزمون</label>
+                        <input type="text" class="form-control mt-1" id="exampleFormControlInput1"
+                               placeholder="مثلا آزمون پایتون" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">توظیحات آزمون</label>
+                        <textarea name="description" class="form-control" id="exampleFormControlTextarea1"
+                                  rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-start">
+                    <button type="submit" class="btn btn-primary">ذخیره</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="open_modal_form" method="post" action="" class="modal-content">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">ویرایش دوره</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input name="name" type="text" class="form-control" id="open_modal_name"
+                               placeholder="name@example.com">
+                        <label for="floatingInput">نام دوره</label>
+                        <p class="my-2">برای مشاهده اطلاعات بیشتر وارد <a href="" id="open_modal_url"
+                                                                          class="text-primary text-decoration-none">صفحه
+                            دوره</a> شوید</p>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-start">
+                    <button type="submit" class="btn btn-primary">ذخیره</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="bg-white rounded mt-4 shadow overflow-scroll" style="width: 94%;height: 600px">
+            <h3 class="text-center mt-3">مدیریت آزمون ها</h3>
+            <div class="d-flex justify-content-end">
+                <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-outline-primary me-3"
+                        style="transform: translateY(-37px)">ساخت آزمون
+                </button>
+            </div>
+            {% if exams %}
+                {% for e in exams %}
+                    {% if user in e.access_teachers.all %}
+                        <div class="d-flex justify-content-center my-4">
+                            <div class=" row border shadow rounded d-flex justify-content-start py-2 {% if e.closed %}bg-warning-subtle{% endif %}"
+                                 style="width: 92%;">
+                                <div class="col-1 ms-2">{{ forloop.counter }}</div>
+                                <div class="col-2">{{ e.name }}</div>
+                                <div class="col-2">
+                                    <i class="bi bi-person-workspace me2"></i> {{ e.courses.count }}کلاس
+                                </div>
+                                <div class="col-2">
+                                    <i class="bi bi-alarm me2"></i>
+                                    {% if e.time %}{{ e.time }}{% else %}?{% endif %} دقیقه
+                                </div>
+                                <div class="col-4 d-flex">
+                                    {% if e.closed %}<a href="{% url 'teacher:exam_analysis' e.academy.url e.id %}"
+                                                        class="btn btn-outline-primary btn-sm"><i
+                                            class="bi bi-gear-fill mx-2 "></i><span>تحلیل</span></a>{% else %}
+                                        <a href="{% url 'exam:exam_details' e.id %}"
+                                           class="btn btn-outline-primary btn-sm"><i
+                                                class="bi bi-gear-fill mx-2 "></i><span>مدیریت</span></a>{% endif %}
+                                    <a href="{% url 'exam:delete' e.id %}"
+                                       class="btn btn-outline-danger btn-sm ms-3 me-2"><i
+                                            class="bi bi-trash-fill mx-2"></i></a>
+                                    <div class="form-check form-switch ms-2 py-1">
+                                        {% if e.closed %}بسته{% else %}{% if e.active %}
+                                            فعال
+                                        {% else %}
+                                            غیر فعال
+                                        {% endif %}{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-secondary" role="alert">
+                    آزمونی یافت نشد !
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

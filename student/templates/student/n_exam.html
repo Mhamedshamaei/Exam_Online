@@ -1,0 +1,43 @@
+{% extends 'student_dashboard.html' %}
+{% load static %}
+{% block title %}آزمون های پیش رو{% endblock %}
+{% block body %}
+    <div class="row d-flex justify-content-center">
+        <div class="bg-white rounded mt-4 shadow overflow-scroll" style="width: 94%;height: 600px">
+            <h3 class="text-center my-3">آزمون های پیش رو</h3>
+            <div style="margin-top: 7vh">
+                {% if exams %}
+                    {% for e in exams %}
+                        <div class="d-flex justify-content-center my-4">
+                            <div class=" row border shadow rounded d-flex justify-content-start py-2 {% if e.closed %}bg-warning-subtle{% endif %}"
+                                 style="width: 92%;">
+                                <div class="col-1 ms-2">{{ forloop.counter }}</div>
+                                <div class="col-2">{{ e.name }}</div>
+                                <div class="col-2">
+                                    <i class="bi bi-person-workspace me2"></i> {{ e.courses.count }}کلاس
+                                </div>
+                                <div class="col-2">
+                                    <i class="bi bi-calendar-date me-2"></i>
+                                    {{ e.start_date }}
+                                </div>
+                                <div class="col-2">
+                                    <i class="bi bi-alarm me-2"></i>
+                                    {{ e.start_time }}
+                                </div>
+                                <div class="col-2">
+                                    <a href="{% url 'exam:views.exam_participate' e.id %}"
+                                       class="btn btn-outline-primary sm btn-sm {% if not e in can_start.all %}disabled{% endif %}">شرکت
+                                        در آزمون</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-secondary" role="alert">
+                        آزمونی یافت نشد !
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

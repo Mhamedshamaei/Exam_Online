@@ -1,0 +1,105 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block title %}شروع آزمون{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'exam/css/participate.css' %}">
+{% endblock %}
+{% block body %}
+    <div style="width: 100vw;height: 100vh;align-items: center;justify-content: center;position: relative"
+         class="d-flex">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+             y="0px"
+             viewBox="0 0 640 640" style="enable-background:new 0 0 640 640;" xml:space="preserve">
+<use href="#circles"/>
+            <defs>
+	<g id="circles">
+		<path>
+		<animate attributeName="d" dur="1s" repeatCount="indefinite"
+                 calcMode="spline" keyTimes="0;1" keySplines="0.56 0.11 0.56 0.92"
+                 values="M165.1,516.2c8.8,72.9,300.4,77.9,309.9-2.2C472.6,438.2,166.8,433.5,165.1,516.2z;
+					M357,527c1.4,14.1-61.3,17.7-72.4,3.8C268.9,510.9,357.3,508.8,357,527z"/>
+            <animate attributeName="fill" dur="1s" repeatCount="indefinite"
+                     values="#c6c8de;#e8ecf7"/>
+		</path>
+        <path>
+		<animate attributeName="d" dur="1s" repeatCount="indefinite"
+                 calcMode="spline" keyTimes="0;1" keySplines="0.56 0.11 0.56 0.92"
+                 values="M106.1,461.3C117.9,569.7,521.4,575,534,459C528.4,347.4,111.1,342.6,106.1,461.3z;
+					M165.1,516.2c8.8,72.9,300.4,77.9,309.9-2.2C472.6,438.2,166.8,433.5,165.1,516.2z"/>
+            <animate attributeName="fill" dur="1s" repeatCount="indefinite"
+                     values="#c3abd1;#c6c8de"/>
+		</path>
+        <path>
+		<animate attributeName="d" dur="1s" repeatCount="indefinite"
+                 calcMode="spline" keyTimes="0;1" keySplines="0.56 0.11 0.56 0.92"
+                 values="M76.1,402.1c12.9,115.2,474,120.5,487.9-2.1C557.5,281.8,82.4,277,76.1,402.1z;
+					M106.1,461.3C117.9,569.7,521.4,575,534,459C528.4,347.4,111.1,342.6,106.1,461.3z"/>
+            <animate attributeName="fill" dur="1s" repeatCount="indefinite"
+                     values="#908bbf;#c3abd1"/>
+		</path>
+        <path>
+		<animate attributeName="d" dur="1s" repeatCount="indefinite"
+                 calcMode="spline" keyTimes="0;1" keySplines="0.56 0.11 0.56 0.92"
+                 values="M58.1,322.2C72.2,454.6,567.2,459.8,582,320C574.2,184.5,65.4,179.8,58.1,322.2z;
+					M76.1,402.1c12.9,115.2,474,120.5,487.9-2.1C557.5,281.8,82.4,277,76.1,402.1z"/>
+            <animate attributeName="fill" dur="1s" repeatCount="indefinite"
+                     values="#4b6eb0;#908bbf"/>
+		</path>
+        <path>
+		<animate attributeName="d" dur="1s" repeatCount="indefinite"
+                 calcMode="spline" keyTimes="0;1" keySplines="0.56 0.11 0.56 0.92"
+                 values="M69.1,246.3C82.9,378.6,556.7,383.8,571,244C563.5,108.5,76,103.8,69.1,246.3z;
+					M58.1,322.2C72.2,454.6,567.2,459.8,582,320C574.2,184.5,65.4,179.8,58.1,322.2z"/>
+            <animate attributeName="fill" dur="1s" repeatCount="indefinite"
+                     values="#1c5ba8;#4b6eb0"/>
+		</path>
+        <path>
+		<animate attributeName="d" dur="1s" repeatCount="indefinite"
+                 calcMode="spline" keyTimes="0;1" keySplines="0.56 0.11 0.56 0.92"
+                 values="M111.1,181.3C122.8,288.5,516.8,293.6,529,179C523.7,68.8,116,63.9,111.1,181.3z;
+					M69.1,246.3C82.9,378.6,556.7,383.8,571,244C563.5,108.5,76,103.8,69.1,246.3z"/>
+            <animate attributeName="fill" dur="1s" repeatCount="indefinite"
+                     values="#134697;#1c5ba8"/>
+		</path>
+        <path>
+		<animate attributeName="d" dur="1s" repeatCount="indefinite"
+                 calcMode="spline" keyTimes="0;1" keySplines="0.56 0.11 0.56 0.92"
+                 values="M168.1,133.3c9.1,79.2,294.3,84.4,303.9-2.3C469.1,48.5,170.1,43.8,168.1,133.3z;
+					M111.1,181.3C122.8,288.5,516.8,293.6,529,179C523.7,68.8,116,63.9,111.1,181.3z"/>
+            <animate attributeName="fill" dur="1s" repeatCount="indefinite"
+                     values="#332765;#134697"/>
+		</path>
+        <path>
+		<animate attributeName="d" dur="1s" repeatCount="indefinite"
+                 calcMode="spline" keyTimes="0;1" keySplines="0.56 0.11 0.56 0.92"
+                 values="M240.2,99.1c5.4,36.1,154.3,40.5,159.8-2.1C400.4,57.7,237,54.4,240.2,99.1z;
+					M168.1,133.3c9.1,79.2,294.3,84.4,303.9-2.3C469.1,48.5,170.1,43.8,168.1,133.3z"/>
+            <animate attributeName="fill" dur="1s" repeatCount="indefinite"
+                     values="#251c47;#332765"/>
+		</path>
+        <path>
+		<animate attributeName="d" dur="1s" repeatCount="indefinite"
+                 calcMode="spline" keyTimes="0;1" keySplines="0.56 0.11 0.56 0.92"
+                 values="M315.8,97.2c0.3,2.7,8.3,3.1,8.6-0.2C324.4,94.1,315.6,93.8,315.8,97.2z;
+					M240.2,99.1c5.4,36.1,154.3,40.5,159.8-2.1C400.4,57.7,237,54.4,240.2,99.1z"/>
+            <animate attributeName="fill" dur="1s" repeatCount="indefinite"
+                     values="#1d182f;#251c47"/>
+		</path>
+	</g>
+                <filter id="goo">
+	    <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
+                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 100 -64"/>
+	  </filter>
+  </defs>
+</svg>
+        <div id="big-div" class="px-4  d-flex flex-column align-items-center justify-content-center">
+            <h3 class="text-center mt-3">{{ exam.name }}</h3>
+            <h6 class="text-center mt-4">{{ exam.description }}</h6>
+            <div class="mt-4">
+                <a href="{% url 'student:n_exam' request.user.student_profile.now_academy.url %}"
+                   class="btn btn-outline-danger mx-1">انصراف</a>
+                <a href="{% url 'participate:load_exam' exam.id %}" class="btn btn-outline-primary mx-1">شروع</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

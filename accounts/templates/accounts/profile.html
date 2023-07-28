@@ -1,0 +1,78 @@
+{% extends 'owner_dashboard.html' %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'accounts/css/profile.css' %}">{% endblock %}
+{% block title %}حساب کاربری{% endblock %}
+{% block body %}
+    <div class="row d-flex justify-content-center">
+        <div class="d-flex justify-content-center">
+            <div class="rounded-circle mt-3" style="width: 150px;height: 150px;z-index: 1000;
+                    overflow: hidden;background-image: url({{ request.user.owner_profile.image.url }}); background-size: cover;background-position: center">
+            </div>
+            <label for="file-upload" class="custom-file-upload">
+                <i class="bi bi-pencil-fill rounded border shadow"></i>
+            </label>
+        </div>
+        <div class="user_information shadow bg-white mt-0 rounded" style="width: 92%;transform: translateY(-40px)">
+            <form enctype="multipart/form-data" class="row my-3 mt-5" method="post"
+                  action="{% url 'accounts:profile' %}">
+                {% csrf_token %}
+                <input name="image" id="file-upload" type="file" oninput="this.form.submit()" accept="image/*"/>
+                <div class="col-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com"
+                               name="first_name" value="{{ request.user.owner_profile.first_name }}">
+                        <label for="floatingInput">نام</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com"
+                               name="father_name" value="{{ request.user.owner_profile.father_name }}">
+                        <label for="floatingInput">نام پدر</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" minlength="11"
+                               placeholder="name@example.com" name="phone" value="{{ request.user.phone }}">
+                        <label for="floatingInput">شماره موبایل</label>
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary mt-3">ثبت</button>
+                    <a href="{% url 'accounts:change_password' %}" class="btn btn-outline-dark mt-3 mx-3">تغییر رمز
+                        عبور</a>
+                </div>
+                <div class="col-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com"
+                               name="last_name" value="{{ request.user.owner_profile.last_name }}">
+                        <label for="floatingInput">نام خوانوادگی</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com"
+                               name="national_code" value="{{ request.user.national_code }}">
+                        <label for="floatingInput">کد ملی</label>
+                    </div>
+                    <div class="form-floating mb-1">
+                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
+                               name="email" maxlength="6" minlength="6" value="{{ request.user.email }}">
+                        <label for="floatingInput">ایمیل</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="user_information shadow bg-white mt-5 py-3 rounded d-flex justify-content-between"
+             style="width: 92%;transform: translateY(-40px)">
+            <div class="d-flex align-items-center">
+                <div class="rounded-circle"
+                     style="width: 50px;height: 50px;background-image: url({{ request.user.owner_profile.academy.image.url }});background-size: cover;background-position: center"></div>
+                <h6 class="ms-3">{{ request.user.owner_profile.academy.name }}</h6>
+            </div>
+            <div>
+                <a href="{% url 'plans:pay_history' %}" class="btn btn-outline-dark mx-2"><i class="bi bi-currency-dollar"></i></a>
+                <a href="{% url 'users:students' %}" class="btn btn-outline-dark"><i
+                        class="bi bi-people"></i></a>
+                <a href="{% url 'users:teachers' %}" class="btn btn-outline-dark mx-2"><i
+                        class="bi bi-person-video3"></i></a>
+                <a href="{% url 'academy:academy' %}" class="btn btn-outline-dark"><i
+                        class="bi bi-gear"></i></a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

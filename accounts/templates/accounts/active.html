@@ -1,0 +1,68 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'accounts/css/register.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/css/active.css' %}">
+{% endblock %}
+{% block title %}فعال سازی حساب{% endblock %}
+{% block body %}
+    <div dir="ltr" class="container" style="width: 45%">
+        <h3 class="text-center text-white mt-3 mb-4">فعال سازی حساب</h3>
+        <div class="container">
+            <div class="row">
+                <form method="post" class="col-md-12">
+                    <div class="form-group input-form text-center shadow rounded py-4 mt-4">
+                        {% csrf_token %}
+                        <div class="form-group-input otp-form-group mb-3" id="all_inputs">
+                            <input required type="text" minlength="1" maxlength="1"
+                                   class="form-control otp-inputbar shadow">
+                            <input required type="text" minlength="1" maxlength="1" class="form-control otp-inputbar">
+                            <input required type="text" minlength="1" maxlength="1" class="form-control otp-inputbar">
+                            <input required type="text" minlength="1" maxlength="1" class="form-control otp-inputbar">
+                            <input required type="text" minlength="1" maxlength="1" class="form-control otp-inputbar">
+                            <input required type="text" minlength="1" maxlength="1" class="form-control otp-inputbar">
+                        </div>
+                    </div>
+                    <input id="final_input" class="d-none" value="" name="code">
+                    <div class="form-group input-form text-center shadow rounded py-4 mt-4">
+                        <button type="button" data-bs-toggle="tooltip" class="btn btn-outline-warning"
+                                data-bs-placement="top" data-bs-title="کد فعال سازی 5 دقیقه اعتبار دارد">!
+                        </button>
+                        <a href="{% url 'accounts:register' %}" type="submit" class="btn btn-outline-danger mx-2">انصراف</a>
+                        <button type="submit" onclick="set_val()"
+                                class="btn btn-outline-dark mx-2">فعال سازی
+                        </button>
+                        <a class="btn btn-outline-primary disabled" id="again"
+                           href="{% url 'accounts:resend' uidb64 token %}">
+                            <span id="timer_btn">60</span>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <p>ایمیل ارسال شد</p>
+                    </div>
+                    <div dir="rtl" class="modal-body">
+                        کاربر گرامی ، کد فعال سازی مجدد به ایمیل شما ارسال شد ، لطفا آن را به کسی ندهید .
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">تایید</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button id="modal_btn" type="button" class="btn btn-primary d-none" data-bs-toggle="modal"
+            data-bs-target="#exampleModal">
+    </button>
+
+{% endblock %}
+{% block js %}
+    <script src="{% static 'accounts/js/active.js' %}"></script>
+{% endblock %}

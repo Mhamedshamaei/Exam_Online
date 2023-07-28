@@ -1,0 +1,85 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'accounts/css/register.css' %}">{% endblock %}
+{% block title %}ثبت نام در وبسایت{% endblock %}
+{% block body %}
+    <div class="container" style="width: 45%">
+        <h3 class="text-center text-white mt-3 mb-4">ثبت نام</h3>
+        <form method="post" action="{% url 'accounts:register' %}" class="row bg-white rounded shadow border"
+              style="height: 510px">
+            {% csrf_token %}
+            <div class="col-6 py-4">
+                <div class="form-floating mx-2">
+                    <input type="text" class="form-control" id="floatingInput" placeholder="نام شما" required
+                           name="first_name">
+                    <label for="floatingInput">نام شما</label>
+                </div>
+                <div class="form-floating mx-2 mt-4">
+                    <input type="text" class="form-control" id="floatingInput" placeholder="نام پدر" required
+                           name="father_name">
+                    <label for="floatingInput">نام پدر</label>
+                </div>
+                <div class="form-floating mx-2 mt-4">
+                    <input type="number" class="form-control" id="floatingInput" placeholder="شماره موبایل" required
+                           name="phone"
+                           oninvalid="this.setCustomValidity('شماره موبایل باید 11 رقم باشد')">
+                    <label for="floatingInput">شماره موبایل</label>
+                </div>
+                <div class="form-floating mx-2 mt-4">
+                    <input type="text" class="form-control" id="floatingInput" placeholder="نام آموزشگاه" required
+                           name="name">
+                    <label for="floatingInput">نام آموزشگاه</label>
+                </div>
+                <div class="form-floating mx-2 mt-4">
+                    <input dir="ltr" type="password" class="form-control" id="floatingInput" placeholder="رمز"
+                           required
+                           name="password1" minlength="6" maxlength="20">
+                    <label for="floatingInput">رمز عبور</label>
+                </div>
+            </div>
+            <div class="col-6 py-4">
+                <div class="form-floating me-2">
+                    <input type="text" class="form-control" id="floatingInput" placeholder="نام خانوادگی" required
+                           name="last_name">
+                    <label for="floatingInput">نام خانوادگی</label>
+                </div>
+                <div class="form-floating me-2 mt-4">
+                    <input type="number" class="form-control" id="floatingInput" placeholder="کد ملی"
+                           name="national_code" oninvalid="this.setCustomValidity('کد ملی باید 10 رقم باشد')">
+                    <label for="floatingInput">کد ملی</label>
+                </div>
+                <div class="form-floating me-2 mt-4">
+                    <input type="email" class="form-control" id="floatingInput" placeholder="ایمیل" required
+                           name="email">
+                    <label for="floatingInput">ایمیل</label>
+                </div>
+                <div class="form-floating me-2 mt-4">
+                    <input type="text" class="form-control" id="portal_url_input"
+                           placeholder="ایمیل" maxlength="15" required>
+                    <label for="floatingInput">آدرس صفحه</label>
+                </div>
+                <div class="form-floating me-2 mt-4">
+                    <input dir="ltr" type="password" class="form-control" id="floatingInput" placeholder="رمز"
+                           required
+                           name="password2" minlength="6" maxlength="20">
+                    <label for="floatingInput">تکرار رمز عبور</label>
+                </div>
+            </div>
+            <div id="register-div" class="rounded shadow">
+                <div class="col-4 d-flex justify-content-start">
+                    <button type="submit" class="btn btn-primary btn-sm me-3">ثبت نام</button>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-danger btn-sm">انصراف</a>
+                </div>
+                <div class="col-8 d-flex justify-content-end overflow-x-auto">
+                    <p class=" m-0">examonline.com/students/<span
+                            id="portal_url_p">your-link</span></p>
+                    <input type="hidden" id="portal_url_hide" value="" name="url">
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'accounts/js/register.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends 'owner_dashboard.html' %}
+{% load static %}
+{% block title %}جزئیات دانش آموز{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'users/css/users_details.css' %}">
+{% endblock %}
+{% block body %}
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" action="{% url 'users:student_delete' student.id %}" class="modal-content">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">حذف دانش آموز</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>آیا مطمعن هستید میخواهید
+                        <span>{{ student.student_profile.first_name }} {{ student.student_profile.last_name }}</span> را
+                        برای همیشه حذف کنید ؟</p>
+                </div>
+                <div class="modal-footer d-flex justify-content-start">
+                    <button type="submit" class="btn btn-warning">بله</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row d-flex align-items-center justify-content-center" style="height: 100vh">
+        <div class="border shadow rounded bg-white row" style="width: 90%;height: 85%">
+            <div class="col-4 d-flex align-items-center justify-content-center">
+                <form method="post" action="{% url 'users:student_update' student.id %}"
+                      class="shadow flex-column rounded border w-100 d-flex align-items-center justify-content-center"
+                      style="height: 90%">
+                    {% csrf_token %}
+                    <div class="form-floating mb-3 user-info">
+                        <input name="first_name" type="text" class="form-control" id="floatingInput"
+                               placeholder="name@example.com"
+                               value="{{ student.student_profile.first_name }}" required>
+                        <label for="floatingInput">نام</label>
+                    </div>
+                    <div class="form-floating mb-3 user-info">
+                        <input name="last_name" type="text" class="form-control" id="floatingInput"
+                               placeholder="name@example.com"
+                               value="{{ student.student_profile.last_name }}" required>
+                        <label for="floatingInput">نام خانوادگی</label>
+                    </div>
+                    <div class="form-floating mb-3 user-info">
+                        <input name="national_code" type="number" class="form-control" id="floatingInput"
+                               placeholder="name@example.com"
+                               value="{{ student.national_code }}" required>
+                        <label for="floatingInput">کد ملی</label>
+                    </div>
+                    <button class="btn btn-outline-primary user-info mt-1" type="submit">ثبت</button>
+                    <a href="{% url 'users:student_reset' student.id %}"
+                       class="btn btn-outline-warning user-info mt-4" data-bs-toggle="tooltip"
+                       data-bs-title="با این کار رمز دانش آموز بازنشانی شده و به کد ملی او بر میگردد">بازنشانی رمز
+                    </a>
+                    <button type="button" class="btn btn-outline-danger user-info mt-4" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">حذف دانش آموز
+                    </button>
+                </form>
+            </div>
+            <div class="col-8 d-flex align-items-center justify-content-center">
+                <div class="shadow rounded border w-100 px-3" style="height: 90%">
+                    <h4 class="my-4 text-center">نمودار رشد آزمون ها</h4>
+                    <div class="form-control">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'users/js/details.js' %}"></script>
+    <script>
+        const ctx = document.getElementById('myChart');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [{% for c in chart %}"{{ c.date }}",{% endfor %}],
+                datasets: [{
+                    label: 'درصد آزمون ها',
+                    data: [{% for c in chart %}{{ c.total }},{% endfor %}],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

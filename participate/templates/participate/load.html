@@ -1,0 +1,75 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'participate/css/load.css' %}">
+{% endblock %}
+{% block title %}
+    پاسخ به آزمون
+{% endblock %}
+{% block body %}
+    <div class="row" style="width: 100vw">
+        <div class="col-3 d-flex align-items-center justify-content-center" style="height: 100vh">
+            <div style="width: 97%;margin-right: 3%;height: 90%;" class="border shadow bg-white rounded">
+                <div id="toolbox" style="height: 10%">
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+                <h3 class="text-center my-3">{{ exam.name }}</h3>
+                <h6 class="text-center my-3">{{ exam.description }}</h6>
+                <p class="text-center">تاریخ شروع : {{ exam.start_date }}</p>
+                <p class="text-center">زمان شروع : {{ exam.start_time }}</p>
+                {% if exam.end_time %}
+                    <p class="text-center">تاریخ پایان : {{ exam.end_date }}</p>
+                    <p class="text-center">ساعت پایان : {{ exam.end_time }}</p>
+                {% else %}
+                    <p class="text-center">زمان آزمون : <span id="left_time">120</span> دقیقه</p>
+                {% endif %}
+                <p class="text-center">برگذار کننده : {{ exam.academy }}</p>
+                <p class="text-center">تعداد سوال تستی : {{ exam.tqs.all.count }}</p>
+                <p class="text-center">تعداد سوال تشریحی : {{ exam.tqs.all.count }}</p>
+                <p class="text-center px-2"> نکته : درصورت انصراف از آزمون نمره ای برای شما ثبت نمیشود !</p>
+                <form method="post" action="{% url 'participate:send' exam.id %}" class="form-control">
+                    {% csrf_token %}
+                    <input id="q" name="dic" type="hidden">
+                    <a href="{% url 'student:n_exam' exam.academy.url %}" class="btn btn-outline-danger mx-2">انصراف</a>
+                    <button type="submit" class="btn btn-outline-dark" onclick="FinishExam()">اتمام آزمون</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-9 d-flex align-items-center justify-content-center" style="height: 100vh">
+            <div style="width: 100%;height: 90%;" class="border shadow bg-white rounded">
+                <div class="swiper mySwiper" style="height: 90%">
+                    <div class="swiper-wrapper">
+                        {% for i in exam.tqs.all %}
+                            <div class="swiper-slide p-4" style="overflow-y: scroll">
+                                <h3>{{ i.text }}</h3>
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-outline-dark sm btn-sm">
+                                        {{ i.level }}
+                                    </button>
+                                </div>
+                                {% if i.image %}<img class="img-fluid rounded my-4" src="{{ i.image.url }}">{% endif %}
+                                {% for c in i.choices %}
+                                    <div class="alert alert-white border my-4" role="alert">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                                   id="flexRadioDefault1"
+                                                   onchange="AddToDb({{ i.id }},{{ forloop.counter }})">
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                                {{ forloop.counter }}-{{ c.text }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'participate/js/load.js' %}"></script>
+{% endblock %}

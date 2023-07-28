@@ -1,0 +1,126 @@
+{% extends 'student_dashboard.html' %}
+{% load static %}
+{% block title %}جزئیات آزمون{% endblock %}
+{% block body %}
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">نمودار رشد آزمون ها</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% for a in sheet.answers.all %}
+        <div class="modal fade" id="exampleModal{{ a.id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">برسی سوال</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h5 class="mb-4">{{ a.question.text }}</h5>
+                        {% for c in a.question.choices %}
+                            {% if forloop.counter == a.question.true %}
+                                <div class="alert alert-success d-flex justify-content-between" role="alert">
+                                    {{ c.text }}{% if a.select == forloop.counter %}<span class="text-left"><i
+                                            class="bi bi-person me-1"></i>انتخاب شما</span>{% endif %}
+                                </div>
+                            {% else %}
+                                <div class="alert alert-secondary d-flex justify-content-between" role="alert">
+                                    {{ c.text }}{% if a.select == forloop.counter %}<span class="text-left"><i
+                                            class="bi bi-person me-1"></i>انتخاب شما</span>{% endif %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+    <div class="row d-flex justify-content-center">
+        <div class="bg-white rounded mt-4 shadow overflow-scroll" style="width: 94%;height: 600px">
+            <h3 class="text-center mt-3"><a href="{% url 'student:l_exam' exam.academy.url %}"
+                                            class="btn btn-outline-dark sm btn-sm me-2"><i
+                    class="bt bi-backspace-reverse"></i></a>{{ exam.name }}</h3>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-outline-primary me-3" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                        style="transform: translateY(-37px)">نمودار رشد
+                </button>
+            </div>
+            <div style="width: 100%;height: 50%;" class="d-flex align-items-center justify-content-center">
+                <div style="width: 80%;height: 100%;border: skyblue 1px solid" class="shadow rounded row">
+                    <div class="col-6 d-flex align-items-center justify-content-center flex-column">
+                        <h5 class="my-2"><i class="bi bi-pen me-2"></i>درصد : %{{ sheet.get_total }}</h5>
+                        <h5 class="my-2"><i class="bi bi-check-circle me-2"></i>درست : {{ sheet.get_true }}</h5>
+                        <h5 class="my-2"><i class="bi bi-x-circle me-2"></i>نادرست : {{ sheet.get_false }}</h5>
+                    </div>
+                    <div class="col-6 d-flex align-items-center justify-content-center">
+                        <div style="width: 240px;height: 240px">
+                            <canvas id="yourChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="width: 100%;height: 50%;" class="d-flex align-items-center justify-content-center my-4">
+                <div style="width: 80%;height: 100%;border: skyblue 1px solid" class="shadow rounded p-3">
+                    {% if sheet.answers %}
+                        {% for a in sheet.answers.all %}
+                            <a type="button" data-bs-toggle="modal" data-bs-target="#exampleModal{{ a.id }}"
+                               class="btn btn-outline-dark sm btn-sm my-2 mx-1">{{ forloop.counter }}-
+                                {% if a.select == a.question.true %}درست{% else %}نادرست{% endif %}</a>
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert alert-secondary" role="alert">
+                            به هیچ گزینه ای پاسخ ندادید !
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        const ctx = document.getElementById('myChart');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [{% for c in chart %}"{{ c.date }}",{% endfor %}],
+                datasets: [{
+                    label: 'درصد آزمون ها',
+                    data: [{% for c in chart %}{{ c.total }},{% endfor %}],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const ptx = document.getElementById('yourChart');
+        new Chart(ptx, {
+            type: 'doughnut',
+            data: {
+                labels: ['درست', 'نادرست'],
+                datasets: [{
+                    data: [{{ sheet.get_true }}, {{ sheet.get_false }}],
+                    borderWidth: 1
+                }]
+            },
+        });
+    </script>
+{% endblock %}

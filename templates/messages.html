@@ -1,0 +1,37 @@
+<script>
+    function messages(msg, tags) {
+        if (tags === 'error') {
+            color = 'linear-gradient(to right, #ed213a, #d82816)'
+        } else if (tags === 'warning') {
+            color = "linear-gradient(to left, #cac531, #e2ec65)"
+        } else {
+            color = "linear-gradient(to left, #5C83F7, #6E9DFD)"
+        }
+        Toastify({
+            text: msg,
+            duration: 9000,
+            newWindow: true,
+            gravity: "top",
+            close: true,
+            position: "right",
+            stopOnFocus: true,
+            style: {
+                background: color,
+                direction: 'ltr',
+                borderRadius: '6px',
+            },
+        }).showToast();
+    }
+    {% if messages %}
+        {% for msg in messages %}
+            const msg = "{{msg}}";
+            {% if msg.tags %}const tags = "{{ msg.tags }}"{% endif %}
+            messages(msg, tags)
+        {% endfor %}
+    {% endif %}
+    toast_btn = document.getElementsByClassName('toast-close')
+    for (let i = 0; i < toast_btn.length; ++i) {
+        let item = toast_btn[i];
+        item.innerHTML = '<i class="bi bi-x"></i>'
+    }
+</script>

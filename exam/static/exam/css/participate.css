@@ -1,0 +1,22 @@
+
+body {
+    background-color: #E0E8EA;
+}
+
+svg {
+    height: 70vh;
+    width: 70vw;
+}
+
+#big-div {
+    width: 70vw;
+    height: 70vh;
+    position: absolute;
+    /* From https://css.glass */
+background: rgba(255, 255, 255, 0.32);
+border-radius: 16px;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(10.9px);
+-webkit-backdrop-filter: blur(10.9px);
+border: 1px solid rgba(255, 255, 255, 0.3);
+}

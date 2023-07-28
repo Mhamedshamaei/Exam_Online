@@ -1,0 +1,32 @@
+input:focus {
+    color: skyblue;
+}
+
+.otp-form-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.otp-inputbar {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    text-align: center;
+    margin-right: 10px;
+    font-size: 16px;
+    border: 1px solid #2b5876;
+
+}
+
+#errmsg {
+    color: red;
+}
+
+.input-form {
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(255, 255, 255, 0.55);
+    border-radius: 12px;
+    border: 1px solid rgba(209, 213, 219, 0.3);
+}

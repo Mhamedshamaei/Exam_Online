@@ -1,0 +1,51 @@
+{% extends 'teacher_dashboard.html' %}
+{% load static %}
+{% block title %}تحلیل آزمون{% endblock %}
+{% block body %}
+    <div class="row d-flex justify-content-center">
+        <div class="bg-white rounded mt-4 shadow overflow-scroll" style="width: 94%;height: 600px">
+            <h3 class="text-center mt-3 mb-4"><a
+                    href="{% url 'teacher:exams' request.user.teacher_profile.now_academy.url %}"
+                    class="btn btn-outline-dark sm btn-sm me-2"><i
+                    class="bt bi-backspace-reverse"></i></a>{{ exam.name }}</h3>
+            <div style="width: 100%;height: 50%;" class="d-flex align-items-center justify-content-center">
+                <div style="width: 80%;height: 100%;border: skyblue 1px solid" class="shadow rounded row">
+                    <div class="col-6 d-flex align-items-center justify-content-center flex-column">
+                        <h5 class="my-2"><i class="bi bi-pen me-2"></i>میانگین درصد : %{{ l_total }}</h5>
+                        <h5 class="my-2"><i class="bi bi-check-circle me-2"></i>میانگین درست : {{ l_true }}</h5>
+                        <h5 class="my-2"><i class="bi bi-x-circle me-2"></i>میانگین نادرست : {{ l_false }}</h5>
+                    </div>
+                    <div class="col-6 d-flex align-items-center justify-content-center">
+                        <div style="width: 240px;height: 240px">
+                            <canvas id="yourChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="width: 100%;height: 50%;" class="d-flex align-items-center justify-content-center my-4">
+                <div style="width: 80%;height: 100%;border: skyblue 1px solid" class="shadow rounded p-3">
+                    {% for s in students %}
+                        <a href="{% url 'teacher:student_analysis' exam.id s.id %}"
+                           class="btn btn-outline-dark sm btn-sm my-2 mx-1">{{ forloop.counter }}-
+                            {{ s.student_profile.first_name }} {{ s.student_profile.last_name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        const ptx = document.getElementById('yourChart');
+        new Chart(ptx, {
+            type: 'doughnut',
+            data: {
+                labels: ['درست', 'نادرست'],
+                datasets: [{
+                    data: [{{ l_true }}, {{ l_false }}],
+                    borderWidth: 1
+                }]
+            },
+        });
+    </script>
+{% endblock %}

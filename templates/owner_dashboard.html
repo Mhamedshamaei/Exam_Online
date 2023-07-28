@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.rtl.min.css"
+          integrity="sha384-WJUUqfoMmnfkBLne5uxXj+na/c7sesSJ32gI7GfCk4zO4GthUKhSEGyvQ839BC51" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    {% block css %}{% endblock %}
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+<div class="row overflow-hidden w-100" style="height: 100vh">
+    <div class="col-2 border border-2 border-top-0 border-bottom-0 d-flex flex-column">
+        <div class="mt-5 mb-3 d-flex justify-content-center">
+            <div class="card text-bg-light mb-3 border shadow d-flex align-items-center flex-column"
+                 style="width: 10rem">
+                <a href="{% url 'accounts:profile' %}">
+                    <div class="rounded-circle border"
+                         style="width: 75px;height: 75px;transform: translateY(-20px);background-image: url({{ request.user.owner_profile.image.url }});background-size: cover;background-position: center"></div>
+                </a>
+                <small style="font-size: 11px;transform: translateY(-10px)"></small>
+                <p style="font-size: 18px">
+                    <span class="mx-1"><a href="{% url 'accounts:profile' %}"
+                                          class="text-decoration-none text-black" title="حساب کاربری"><i
+                            class="bi bi-person"></i></a> </span>
+                    <span class="mx-1"><a href="{% url 'accounts:change_password' %}"
+                                          class="text-decoration-none text-black" title="تغییر رمز عبور"><i
+                            class="bi bi-key"></i></a> </span>
+                    <span class="mx-1"><a href="{% url 'academy:academy' %}"
+                                          class="text-decoration-none text-black"
+                                          title="مدیریت آموزشگاه"><i class="bi bi-building"></i></a> </span>
+                    <span class="mx-1"><a href="{% url 'accounts:logout' %}" class="text-decoration-none text-black"
+                                          title="خروج از حساب"><i
+                            class="bi bi-box-arrow-right"></i></a> </span>
+                </p>
+            </div>
+        </div>
+        <div class="ms-4 my-2"><a href="{% url 'dashboard:home' %}" class="text-decoration-none text-dark"><h6><i
+                class="bi bi-house me-2"></i>داشبورد
+        </h6></a></div>
+        <div class="ms-4 my-2"><a href="{% url 'exam:exams' %}"
+                                  class="text-decoration-none {% if request.path == '/exam/' %}text-primary{% else %}text-dark{% endif %}">
+            <h6><i class="bi bi-pen me-2"></i>آزمون ها</h6>
+        </a></div>
+        <div class="ms-4 my-2"><a href="{% url 'courses:courses' %}"
+                                  class="text-decoration-none {% if request.path == '/courses/' %}text-primary{% else %}text-dark{% endif %}">
+            <h6><i
+                    class="bi bi-easel me-2"></i>دوره ها</h6>
+        </a></div>
+        <div class="ms-4 my-2"><a data-bs-toggle="collapse" href="#users"
+                                  class="text-decoration-none {% if request.path == '/users/students/' or request.path == '/users/teachers/' %}text-primary{% else %}text-dark{% endif %}">
+            <h6><i class="bi bi-people me-2"></i>کاربران
+            </h6>
+        </a></div>
+        <div class="collapse" id="users">
+            <div style="margin-right: 40px">
+                <a href="{% url 'users:students' %}" class="text-decoration-none text-dark"><p>دانش آموزان</p></a>
+                <a href="{% url 'users:teachers' %}" class="text-decoration-none text-dark"><p>دبیران</p></a>
+            </div>
+        </div>
+        <div class="ms-4 my-2"><a href="{% url 'plans:plans' %}" class="text-decoration-none text-dark"><h6><i
+                class="bi bi-bag-check me-2 {% if request.path == '/plans/' %}text-primary{% else %}text-dark{% endif %}"></i>خرید
+            اشتراک</h6></a></div>
+        <div class="ms-4 my-2"><a href="{% url 'accounts:profile' %}"
+                                  class="text-decoration-none {% if request.path == '/accounts/profile/' %}text-primary{% else %}text-dark{% endif %}">
+            <h6>
+                <i
+                        class="bi bi-person me-2"></i>حساب
+                کاربری</h6></a></div>
+        <div class="ms-4 my-2"><a href="{% url 'accounts:logout' %}" class="text-decoration-none text-dark"><h6><i
+                class="bi bi-box-arrow-right me-2"></i>خروج</h6></a></div>
+        <div class="d-flex justify-content-center" style="position:absolute;bottom: 0;width: 15.5%"><small
+                class="py-1 mb-1 rounded px-2 m-0 border">portal version : 2.3</small></div>
+    </div>
+    <div class="col-10 h-100" style="background-color: #F5F7FF;overflow-y: scroll">
+        {% block body %}{% endblock %}
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
+        integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+<script src="
+https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js
+"></script>
+{% include 'messages.html' %}
+{% block js %}{% endblock %}
+</body>
+</html>

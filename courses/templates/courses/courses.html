@@ -1,0 +1,100 @@
+{% extends 'owner_dashboard.html' %}
+{% load static %}
+{% block title %}مدیریت دوره ها{% endblock %}
+{% block body %}
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" action="{% url 'courses:add' %}" class="modal-content">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">ساخت کلاس جدید</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">نام کلاس</label>
+                        <input type="text" class="form-control mt-1" id="exampleFormControlInput1"
+                               placeholder="مثلا آموزش پایتون" name="name">
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-start">
+                    <button type="submit" class="btn btn-primary">ذخیره</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="open_modal_form" method="post" action="" class="modal-content">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">ویرایش دوره</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input name="name" type="text" class="form-control" id="open_modal_name"
+                               placeholder="name@example.com">
+                        <label for="floatingInput">نام دوره</label>
+                        <p class="my-2">برای مشاهده اطلاعات بیشتر وارد <a href="" id="open_modal_url"
+                                                                          class="text-primary text-decoration-none">صفحه
+                            دوره</a> شوید</p>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-start">
+                    <button type="submit" class="btn btn-primary">ذخیره</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="bg-white rounded mt-4 shadow overflow-scroll" style="width: 94%;height: 600px">
+            <h3 class="text-center mt-3">مدیریت کلاس ها</h3>
+            <div class="d-flex justify-content-end">
+                <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-outline-primary me-3"
+                        style="transform: translateY(-37px)">ساخت کلاس
+                </button>
+            </div>
+            {% if courses %}
+                {% for c in courses %}
+                    <div class="d-flex justify-content-center my-4">
+                        <div class=" row border shadow rounded d-flex justify-content-start py-2" style="width: 92%;">
+                            <div class="col-1 ms-2">{{ forloop.counter }}</div>
+                            <div class="col-4">{{ c.name }}</div>
+                            <div class="col-2">
+                                <i class="bi bi-people-fill me-2"></i> {{ c.students.count }} نفر
+                            </div>
+                            <div class="col-4">
+                                <a href="{% url 'courses:details' c.id %}" class="btn btn-outline-primary btn-sm"><i
+                                        class="bi bi-gear-fill mx-2 "></i>مدیریت
+                                    کلاس</a>
+                                <button data-name="{{ c.name }}" data-id="{{ c.id }}" data-bs-toggle="modal"
+                                        data-bs-target="#Modal"
+                                        class="btn btn-outline-warning btn-sm mx-2 open_modal"><i
+                                        class="bi bi-pen-fill mx-2 "></i>ویرایش
+                                </button>
+                                <a href="{% url 'courses:delete' c.id %}" class="btn btn-outline-danger btn-sm"><i
+                                        class="bi bi-trash-fill "></i></a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-secondary" role="alert">
+                    کلاسی یافت نشد !
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        $(document).on("click", ".open_modal", function () {
+            document.getElementById('open_modal_name').value = $(this).data('name')
+            document.getElementById('open_modal_url').href = $(this).data('id')
+            document.getElementById('open_modal_form').action = 'update/' + $(this).data('id') + '/'
+        })
+    </script>
+{% endblock %}

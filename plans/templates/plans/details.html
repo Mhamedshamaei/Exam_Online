@@ -1,0 +1,72 @@
+{% extends 'owner_dashboard.html' %}
+{% load static %}
+{% block title %}جزئیات اشتراک{% endblock %}
+{% block body %}
+    <div class="row d-flex align-items-center justify-content-center" style="height: 100vh">
+        <div class="row border shadow rounded bg-white" style="width: 90%;height: 93%;overflow-y: scroll">
+            <div class="col-8">
+                <div style="height: 50%;width: 95%;border: skyblue 1px solid;overflow-y: scroll"
+                     class="shadow rounded mt-4 d-flex flex-column align-items-center">
+                    <h3 class="my-2">اشتراک {{ plan.name }}</h3>
+                    <p class="mt-3"><i class="bi bi-star me-2 text-primary"></i>{{ plan.d_1 }}</p>
+                    <p class="mt-1"><i class="bi bi-star me-2 text-primary"></i>{{ plan.d_2 }}</p>
+                    <p class="mt-3"><i class="bi bi-star me-2 text-warning"></i>
+                        پرداخت ایمن از طریق تمامی کارت های بانکی عضو شتاب
+                    </p>
+                    <p class="mt-3"><i class="bi bi-star me-2 text-warning"></i>
+                        اشتراک خریداری شده پس از پرداخت به حساب شما اضافه خواهد شد
+                    </p>
+                </div>
+                <div style="height: 35%;width: 95%;border: skyblue 1px solid;"
+                     class="shadow rounded mt-4 px-4 d-flex flex-column align-items-center">
+                    <form method="post" action="{% url 'plans:coupon' order.id %}" class="input-group my-3">
+                        {% csrf_token %}
+                        <div class="form-floating">
+                            <input name="code" type="text" class="form-control" id="floatingInputGroup1"
+                                   placeholder="Username" required>
+                            <label for="floatingInputGroup1">کد تخفیف</label>
+                        </div>
+                        <span class="input-group-text"><button type="submit" class="btn btn-outline-primary"><i
+                                class="bi bi-search"></i></button></span>
+                    </form>
+                    {% if coupon %}
+                        <div class="alert alert-info mt-2" role="alert">
+                            تخفیف %{{ coupon }} اعمال شد
+                        </div>
+                    {% else %}
+                        <div class="alert alert-secondary mt-2" role="alert">
+                            کد تخفیفی وجود ندارد !
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-4">
+                <div style="height: 90%;width: 90%;border: skyblue 1px solid;position: relative"
+                     class="shadow rounded mt-4 d-flex flex-column align-items-center px-3">
+                    <div style="width: 160px;height: 160px;background-image: url({{ plan.image.url }});background-position: center;background-size: cover"
+                         class="bg-primary rounded-circle mt-3"></div>
+                    {% if coupon %}
+                        <h4 class="mt-3"><span style="font-size: 22px;text-decoration: line-through"
+                                               id="price">{{ order.plan.price }}</span><span
+                            style="font-size: 14px">تومان</span>
+                        <h4 class="mt-1 text-primary">
+                        <span id="price2" style="font-size: 22px;">{{ order.get_price }}</span><span
+                            style="font-size: 14px">تومان</span>
+                    {% else %}
+                        <h4 class="mt-3"><span style="font-size: 22px" id="price">{{ order.get_price }}</span><span
+                            style="font-size: 14px">تومان</span>
+                    {% endif %}
+                    </h4>
+                    <h4 class="my-1">{{ order.plan.exam_num }}<span style="font-size: 14px">آزمون</span></h4>
+                    <div class="d-flex flex-column" style="width: 90%;position: absolute;bottom: 17px;">
+                        <a href="{% url 'plans:plans' %}" class="btn btn-outline-dark mb-2">انصراف</a>
+                        <a href="{% url 'plans:request' order.id order.price %}" class="btn btn-outline-primary">خرید</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'plans/js/details.js' %}"></script>
+{% endblock %}

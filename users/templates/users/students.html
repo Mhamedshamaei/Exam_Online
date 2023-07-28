@@ -1,0 +1,126 @@
+{% extends 'owner_dashboard.html' %}
+{% load static %}
+{% block title %}مدیریت دانش آموزان{% endblock %}
+{% block body %}
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" action="{% url 'users:student_add' %}" class="modal-content">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">ایجاد دانش آموز</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input name="first_name" type="text" class="form-control" id="floatingInput"
+                               placeholder="name@example.com" required>
+                        <label for="floatingInput">نام</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input name="last_name" type="text" class="form-control" id="floatingInput"
+                               placeholder="name@example.com" required>
+                        <label for="floatingInput">نام خوانوادگی</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input name="national_code" type="number" class="form-control" id="floatingInput"
+                               placeholder="name@example.com" required>
+                        <label for="floatingInput">کد ملی</label>
+                    </div>
+                    <small><i class="bi bi-star text-warning me-1"></i>دانش آموزان برای ورود به صفحه خود میتوانند از <a
+                            href=""
+                            class="text-decoration-none text-primary">این لینک</a> استفاده کنند</small>
+                    <br>
+                    <small><i class="bi bi-star text-warning me-1"></i>نام کاربری و رمز عبور دانش آموزان به طور پیش فرض
+                        کد ملی آنها میباشد</small>
+                </div>
+                <div class="modal-footer d-flex justify-content-start">
+                    <button type="submit" class="btn btn-primary">ثبت</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="modal_form" method="post" action="" class="modal-content">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">ویرایش دانش آموز</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input name="first_name" type="text" class="form-control" id="modal_first_name"
+                               placeholder="name@example.com">
+                        <label for="floatingInput">نام</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input name="last_name" type="text" class="form-control" id="modal_last_name"
+                               placeholder="name@example.com">
+                        <input type="hidden" name="national_code" value="" id="national_code_modal">
+                        <label for="floatingInput">نام خانوادگی</label>
+                    </div>
+                    <p class="my-2">برای مشاهده اطلاعات بیشتر وارد <a href="" id="modal_link"
+                                                                      class="text-primary text-decoration-none">این صفحه</a> شوید</p>
+                </div>
+                <div class="modal-footer d-flex justify-content-start">
+                    <button type="submit" class="btn btn-primary">ذخیره</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="bg-white rounded mt-4 shadow overflow-scroll" style="width: 94%;height: 600px">
+            <h3 class="text-center mt-3">مدیریت دانش آموزان</h3>
+            <div class="d-flex justify-content-end">
+                <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-outline-primary me-3"
+                        style="transform: translateY(-37px)">ایجاد دانش آموز
+                </button>
+            </div>
+            {% if student %}
+                {% for s in student %}
+                    <div class="d-flex justify-content-center my-4">
+                        <div class=" row border shadow rounded d-flex justify-content-start py-2" style="width: 92%;">
+                            <div class="col-1 ms-2">{{ forloop.counter }}</div>
+                            <div class="col-2">{{ s.student_profile.first_name }}</div>
+                            <div class="col-2">{{ s.student_profile.last_name }}</div>
+                            <div class="col-2">
+                                <i class="bi bi-person-vcard me-2"></i>{{ s.national_code }}
+                            </div>
+                            <div class="col-4">
+                                <button type="button" data-first-name="{{ s.student_profile.first_name }}"
+                                        data-last-name="{{ s.student_profile.last_name }}" data-ncode = {{ s.national_code }}
+                                        data-id="{{ s.id }}" data-action="{% url 'users:student_update' s.id %}"
+                                        data-bs-toggle="modal" data-bs-target="#Modal" data-link="{% url 'users:student_details' s.id %}"
+                                        class="btn btn-outline-warning btn-sm mx-2 open_modal"><i
+                                        class="bi bi-pen me-2"></i>ویرایش
+                                </button>
+                                <a href="{% url 'users:student_details' s.id %}" class="btn btn-outline-primary btn-sm"><i
+                                        class="bi bi-person mx-2 "></i>پروفایل</a>
+                                <a href="{% url 'users:student_delete' s.id %}"
+                                   class="btn btn-outline-danger btn-sm mx-2"><i
+                                        class="bi bi-trash-fill"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-secondary" role="alert">
+                    دانش آموزی یافت نشد !
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        $(document).on("click", ".open_modal", function () {
+            document.getElementById('modal_first_name').value = $(this).data('first-name')
+            document.getElementById('modal_last_name').value = $(this).data('last-name')
+            document.getElementById('modal_link').href = $(this).data('link')
+            document.getElementById('modal_form').action = $(this).data('action')
+            document.getElementById('national_code_modal').value = $(this).data('ncode')
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'owner_dashboard.html' %}
+{% load static %}
+{% block title %}جزئیات سوال{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'academy/css/academy.css' %}">
+{% endblock %}
+{% block body %}
+    <div class="row d-flex align-items-center justify-content-center" style="height: 100vh">
+        <form method="post" action="{% url 'exam:d_question_update' exam.id question.id %}"
+              class="border shadow rounded bg-white" style="width: 90%;height: 93%;overflow-y: scroll"
+              enctype="multipart/form-data">
+            <div id="register-div" class="rounded shadow mt-4 py-3 px-2 mx-4">
+                <div class="col-4 d-flex justify-content-start px-2">
+                    <a type="button" class="btn btn-outline-dark sm btn-sm mx-2"
+                       href="{% url 'exam:exam_details' exam.id %}"><i
+                            class="bi bi-backspace-reverse"></i>
+                    </a>
+                    <button type="submit" class="btn btn-outline-primary btn-sm me-2">ثبت</button>
+                    <a href="{% url 'exam:d_question_delete' exam.id question.id %}"
+                       class="btn btn-outline-danger btn-sm me-2">حذف</a>
+                </div>
+                <div class="col-8 d-flex justify-content-end overflow-x-auto">
+                    <select onchange="this.form.submit()" style="width: 100px;" class="form-select mx-2"
+                            aria-label="Default select example" required
+                            name="level">
+                        <option {% if question.level == 'آسان' %}selected{% endif %} value="آسان">آسان</option>
+                        <option {% if question.level == 'متوسط' %}selected{% endif %} value="متوسط">متوسط</option>
+                        <option {% if question.level == 'سخت' %}selected{% endif %} value="سخت">سخت</option>
+                    </select>
+                    <button class="btn btn btn-outline-dark btn-sm mx-2">
+                        <div class="form-check">
+                            <input name="is_left" class="form-check-input" type="checkbox"
+                                   onchange="this.form.submit()" id="flexCheckDefault"
+                                   {% if question.is_left %}checked{% endif %}>
+                            <label class="form-check-label" for="flexCheckDefault">
+                                از چپ
+                            </label>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            {% csrf_token %}
+            <div style="border: skyblue 1px solid;" class="rounded shadow mt-4 py-3 px-2 mx-4 px-3">
+                <div class="form-floating mb-4">
+                    <textarea name="text" class="form-control" placeholder="Leave a comment here"
+                              id="floatingTextarea">{{ question.text }}</textarea>
+                    <label for="floatingTextarea">متن سوال</label>
+                </div>
+                <input value="{{ question.true }}" type="hidden">
+                <div class="row">
+                    <div class="col-12">
+                        {% if question.image %}
+                            <div style="height: 47vh;width: 100%;background-image: url({{ question.image.url }});background-size: cover;background-position: center"
+                                 class="d-flex align-items-center justify-content-center rounded mt-3 border">
+                                <label for="base_img" class="sm btn-sm mx-1 btn btn-primary"><i
+                                        class="bi bi-plus"></i>
+                                </label>
+                                <a href="{% url 'exam:d_question_delete_img' exam.id question.id %}"
+                                   class="sm btn-sm mx-1 btn btn-danger"><i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        {% else %}
+                            <div style="height: 47vh;width: 100%"
+                                 class="d-flex align-items-center justify-content-center mt-3">
+                                <label for="base_img" class="btn btn-outline-primary"><i class="bi bi-plus"></i>
+                                </label>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <input id="base_img" name="image" class="d-none" type="file" oninput="this.form.submit()"
+                   accept="image/*"/>
+        </form>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'accounts/js/register.js' %}"></script>
+{% endblock %}

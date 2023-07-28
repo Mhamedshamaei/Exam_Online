@@ -1,0 +1,7 @@
+#register-div{
+    width: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    border: skyblue 1px solid;
+}

@@ -1,0 +1,319 @@
+{% extends 'owner_dashboard.html' %}
+{% load static %}
+{% block title %}جزئیات آزمون{% endblock %}
+{% block body %}
+    <div class="modal fade" id="teacherModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">افزودن کلاس</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body row" style="height: 80vh;">
+                    <div class="col-7" style="height: 100%">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="جستوجو" aria-label="Username"
+                                   aria-describedby="basic-addon1" id="search-input">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+                        </div>
+                        <div style="width: 100%;height: 88%;overflow-y: scroll" class="border rounded px-3"
+                             id="teachers_div">
+                            <div class="text-center mt-4" id="teacher_load">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-5" style="height: 100%">
+                        <div style="width: 100%;height: 88%;overflow-y: scroll" class="border rounded px-3 py-3"
+                             id="small-teacher-div">
+                            <div class="alert alert-secondary" role="alert" id="not-now-alert-teacher">
+                                هنوز چیزی انتخاب نشده !
+                            </div>
+                        </div>
+                        <form method="post" action="{% url 'exam:class_invitation' exam.id %}">
+                            {% csrf_token %}
+                            <input name="dic" value="" class="d-none" id="final_teacher_dic">
+                            <button type="submit" class="btn btn-outline-primary mt-3" style="width: 100%"
+                                    onclick="SetTeacherValue()">افزودن
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="askmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">فعال سازی آزمون<span></span></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>آیا مطمعن هستید میخواهید آزمون <span class="text-primary">{{ exam.name }}</span> را
+                        <span>{% if exam.active %}غیر فعال{% else %}فعال{% endif %}</span> کنید ؟
+                    </p>
+                    {% if exam.active %}
+                        <small class="text-warning">درصورت غیر فعال کردن ، برای فعالسازی مجدد از اشتراک حساب شما کسر
+                            خواهد شد !</small>
+                    {% endif %}
+                </div>
+                <div class="modal-footer d-flex justify-content-start">
+                    <a href="{% url 'exam:enable_exam' exam.id %}" class=" btn btn-primary">بله</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <form class="modal-content" method="post" action="{% url 'exam:update' exam.id %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">تنظیمات آزمون</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com"
+                               required name="name" value="{{ exam.name }}">
+                        <label for="floatingInput">نام آزمون</label>
+                    </div>
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a comment here"
+                                  id="floatingTextarea" name="description" required>{{ exam.description }}</textarea>
+                        <label for="floatingTextarea">توظیحات آزمون</label>
+                    </div>
+                    <div class="form-control mt-3 py-2">
+                        <label for="dateinp">تاریخ شروع</label>
+                        <input type="date" id="dateinp" class="me-2" required name="start_date"
+                               value="{{ exam.start_date }}">
+                        <label for="timeinp">ساعت شروع</label>
+                        <input type="time" id="timeinp" required name="start_time" value="{{ exam.start_time }}">
+                    </div>
+                    <div class="form-control my-3">
+                        <button type="submit" class="btn btn-outline-dark sm btn-sm" data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                data-bs-title="لطفا یا زمان و یا تاریخ پایان را انتخاب کنید ، درصورت انتخاب دو مورد اولویت با زمان است .">
+                            نکته اول
+                        </button>
+                        <button type="submit" class="btn btn-outline-dark sm btn-sm ms-3" data-bs-toggle="tooltip"
+                                data-bs-placement="top" data-bs-title="زمان آزمون بر حسب دقیقه است">نکته دوم
+                        </button>
+                    </div>
+                    <div class="form-floating mb-3 mt-1">
+                        <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com"
+                               name="time" value="{{ exam.time }}">
+                        <label for="floatingInput">زمان آزمون</label>
+                    </div>
+                    <div class="form-control mt-3 py-2">
+                        <label for="dateinp">تاریخ پایان</label>
+                        <input type="date" id="dateinp" class="me-2" name="end_date" value="{{ exam.end_date }}">
+                        <label for="timeinp">ساعت پایان</label>
+                        <input type="time" id="timeinp" name="end_time" value="{{ exam.end_time }}">
+                    </div>
+                    <div class="form-control my-3">
+                        <input class="form-check-input me-1" type="checkbox" value="" id="flexCheckDefault"
+                               name="negative" {% if exam.negative %}checked{% endif %}>
+                        <label class="form-check-label" for="flexCheckDefault">
+                            آزمون نمره منفی داشته باشد
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-start">
+                    <button type="submit" class="btn btn-primary">تایید</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal fade" id="t_q" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form class="modal-content" method="post" action="{% url 'exam:add_t_question' exam.id %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">افزودن سوال تستی</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a comment here"
+                                  id="floatingTextarea" required name="text"></textarea>
+                        <label for="floatingTextarea">متن سوال</label>
+                    </div>
+                    <select class="form-select my-3" aria-label="Default select example" required name="level">
+                        <option value="آسان">آسان</option>
+                        <option value="متوسط">متوسط</option>
+                        <option value="سخت">سخت</option>
+                    </select>
+                </div>
+                <div class="modal-footer d-flex justify-content-start">
+                    <button type="submit" class="btn btn-primary">ثبت</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal fade" id="s_q" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form class="modal-content" method="post" action="{% url 'exam:add_d_question' exam.id %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">افزودن سوال تشریحی</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a comment here"
+                                  id="floatingTextarea" required name="text"></textarea>
+                        <label for="floatingTextarea">متن سوال</label>
+                    </div>
+                    <select class="form-select my-3" aria-label="Default select example" required name="level">
+                        <option value="آسان">آسان</option>
+                        <option value="متوسط">متوسط</option>
+                        <option value="سخت">سخت</option>
+                    </select>
+                    {#                    {{ form.level }}#}
+                </div>
+                <div class="modal-footer d-flex justify-content-start">
+                    <button type="submit" class="btn btn-primary">ثبت</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal fade" id="closeExam" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">بسن آزمون<span></span></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>آیا مطمعن هستید میخواهید آزمون را ببندید ؟
+                    </p>
+                    <small class="text-warning">درصورت بستن آزمون ، میتوانید نتایج را مشاهده کنید و دیگر کسی نمیتواند در آن شرکت کند</small>
+                </div>
+                <div class="modal-footer d-flex justify-content-start">
+                    <a href="{% url 'exam:close_exam' exam.id %}" class=" btn btn-primary">بله</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="bg-white rounded mt-4 shadow overflow-scroll" style="width: 94%;height: 600px">
+            <h3 class="text-center mt-3">{{ exam.name }}</h3>
+            <div class="d-flex justify-content-end">
+                <div>
+                    <button data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            class="btn btn-outline-primary me-3"
+                            style="transform: translateY(-37px)"><i class="bi bi-gear"></i>
+                    </button>
+                    <a data-bs-toggle="modal" data-bs-target="#teacherModal"
+                       href="{% url 'exam:get_classes' exam.id %}"
+                       class="btn btn-outline-primary me-3" id="add_teacher"
+                       style="transform: translateY(-37px)"><i class="bi bi-person-workspace"></i>
+                    </a>
+                    {% if exam.active %}
+                        <button data-bs-toggle="modal" data-bs-target="#askmodal"
+                                class="btn btn-outline-primary me-3" id="add_student"
+                                style="transform: translateY(-37px)"><i class="bi bi-toggle-on"></i>
+                        </button>
+                        <button data-bs-toggle="modal" data-bs-target="#closeExam"
+                                class="btn btn-outline-primary me-3"
+                                style="transform: translateY(-37px)"><i class="bi bi-check2-circle"></i>
+                        </button>
+                    {% else %}
+                        <button data-bs-toggle="modal" data-bs-target="#askmodal"
+                                class="btn btn-outline-primary me-3" id="add_student"
+                                style="transform: translateY(-37px)"><i class="bi bi-toggle-off"></i>
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="d-flex justify-content-center my-4">
+                <a type="button" class="btn btn-outline-dark sm btn-sm mx-2" href="{% url 'exam:exams' %}"><i
+                        class="bi bi-backspace-reverse"></i>
+                </a>
+                <button type="button" class="btn btn-outline-dark sm btn-sm mx-2" data-bs-toggle="modal"
+                        data-bs-target="#t_q">سوال تستی
+                </button>
+                <button type="button" class="btn btn-outline-dark sm btn-sm mx-2" data-bs-toggle="modal"
+                        data-bs-target="#s_q">سوال تشریحی
+                </button>
+            </div>
+            {% if courses %}
+                <div class="d-flex justify-content-center my-4">
+                    <div class="border shadow bg-warning-subtle rounded py-2"
+                         style="width: 92%;">
+                        {% for c in courses %}
+                            <div class="btn-group ms-1" role="group" aria-label="Basic example">
+                                <a href="{% url 'courses:details' c.id %}" type="button"
+                                   class="btn btn-primary sm btn-sm">{{ c.name }}</a>
+                                <a href="{% url 'exam:delete_course' exam.id c.id %}" type="button"
+                                   class="btn btn-primary sm btn-sm"><i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-secondary" role="alert">
+                    دوره ای یافت نشد !
+                </div>
+            {% endif %}
+            {% if qs %}
+                {% for q in tqs %}
+                    <div class="d-flex justify-content-center my-4">
+                        <div class=" row border shadow rounded d-flex justify-content-start py-2" style="width: 92%;">
+                            <div class="col-1 ms-2">{{ forloop.revcounter }}</div>
+                            <div class="col-3">{{ q.text }}</div>
+                            <div class="col-2"><i class="bi bi-check2 me-1"></i>تستی</div>
+                            <div class="col-2">
+                                <i class="bi bi-card-list me-2"></i>سوال {{ q.level }}
+                            </div>
+                            <div class="col-3">
+                                <a href="{% url 'exam:t_question' exam.id q.id %}"
+                                   class="btn btn-outline-primary btn-sm"><i
+                                        class="bi bi-gear-fill mx-2 "></i>جزئیات</a>
+                                <a href="{% url 'exam:t_question_delete' exam.id q.id %}"
+                                   class="btn btn-outline-danger btn-sm mx-2"><i
+                                        class="bi bi-trash-fill mx-2"></i>حذف</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% for q in dqs %}
+                    <div class="d-flex justify-content-center my-4">
+                        <div class=" row border shadow rounded d-flex justify-content-start py-2" style="width: 92%;">
+                            <div class="col-1 ms-2">{{ forloop.revcounter }}</div>
+                            <div class="col-3">{{ q.text }}</div>
+                            <div class="col-2"><i class="bi bi-pen me-1"></i>تشریحی</div>
+                            <div class="col-2">
+                                <i class="bi bi-card-list me-2"></i>سوال {{ q.level }}
+                            </div>
+                            <div class="col-3">
+                                <a href="{% url 'exam:d_question' exam.id q.id %}"
+                                   class="btn btn-outline-primary btn-sm"><i
+                                        class="bi bi-gear-fill mx-2 "></i>جزئیات</a>
+                                <a href="{% url 'exam:d_question_delete' exam.id q.id %}"
+                                   class="btn btn-outline-danger btn-sm mx-2"><i
+                                        class="bi bi-trash-fill mx-2"></i>حذف</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-secondary" role="alert">
+                    سوالی ای یافت نشد !
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'exam/js/details.js' %}"></script>
+{% endblock %}

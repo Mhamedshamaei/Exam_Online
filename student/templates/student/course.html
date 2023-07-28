@@ -1,0 +1,37 @@
+{% extends 'student_dashboard.html' %}
+{% block title %}کلاس های من{% endblock %}
+{% block body %}
+    <div class="row d-flex justify-content-center">
+        <div class="bg-white rounded mt-4 shadow overflow-scroll" style="width: 94%;height: 600px">
+            <h3 class="text-center mt-3">کلاس های من</h3>
+            <div class="d-flex justify-content-end">
+            </div>
+            <div class="mt-4">
+                {% if courses %}
+                    {% for c in courses %}
+                        <div class="d-flex justify-content-center my-4">
+                            <div class=" row border shadow rounded d-flex justify-content-start py-2"
+                                 style="width: 92%;">
+                                <div class="col-1 ms-2">{{ forloop.counter }}</div>
+                                <div class="col-4">{{ c.name }}</div>
+                                <div class="col-2">
+                                    <i class="bi bi-people-fill me-2"></i> {{ c.students.count }} نفر
+                                </div>
+                                <div class="col-2">
+                                    <i class="bi bi-calendar-date me-2"></i>{{ c.create.date }}
+                                </div>
+                                <div class="col-2">
+                                    <i class="bi bi-alarm me-2"></i>{{ c.create.time }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-secondary" role="alert">
+                        کلاسی یافت نشد !
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

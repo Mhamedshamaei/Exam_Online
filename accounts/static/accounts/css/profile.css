@@ -1,0 +1,13 @@
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    z-index: 100000;
+    transform: translateY(40px) translateX(30px);
+}
+
+.custom-file-upload i {
+    background-color: white;
+    padding: 2px;
+}

@@ -1,0 +1,75 @@
+{% extends 'owner_dashboard.html' %}
+{% load static %}
+{% block title %}مدیریت آموزشگاه{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'academy/css/academy.css' %}">
+{% endblock %}
+{% block body %}
+    <div class="row d-flex align-items-center justify-content-center" style="height: 100vh">
+        <form method="post" class="border shadow rounded bg-white" style="width: 90%;height: 85%"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-6 mt-4">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com"
+                               name="name" value="{{ academy.name }}">
+                        <label for="floatingInput">نام آموزشگاه</label>
+                    </div>
+                </div>
+                <div class="col-6 mt-4">
+                    <div class="form-floating mb-3">
+                        <input dir="ltr" type="text" class="form-control"
+                               id="portal_url_input" required
+                               placeholder="name@example.com" name="url"
+                               value="{{ academy.url }}">
+                        <label for="floatingInput">آدرس صفحه</label>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-evenly align-items-center border rounded mx-1" style="height: 300px">
+                <div class="d-flex align-items-center flex-column">
+                    <div style="width: 120px;height: 120px;background-image: url({{ academy.image.url }});background-size: cover;background-position: center"
+                         class="rounded border"><label for="base_img" style="cursor: pointer"><i
+                            class="bi bi-pencil-square m-1"></i></label></div>
+                    <input id="base_img" name="image" class="d-none" type="file" oninput="this.form.submit()"
+                           accept="image/*"/>
+                    <p class="mt-2">عکس اصلی</p>
+                </div>
+                {% for i in images %}
+                    <div class="d-flex align-items-center flex-column">
+                        <div style="width: 120px;height: 120px;background-image: url({{ i.g_image.url }});background-position: center;background-size: cover"
+                             class="rounded border"></div>
+                        <p class="mt-2">بنر {{ forloop.counter }}</p>
+                        <a href="{% url 'academy:delete_img' i.id %}" class="btn btn-outline-danger sm btn-sm"><i
+                                class="bi bi-trash"></i></a>
+                    </div>
+                {% endfor %}
+                <button class="btn btn-outline-primary sm btn-sm" type="button" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal"><label for="file-upload" style="cursor: pointer"><i
+                        class="bi bi-plus-lg"></i></label></button>
+            </div>
+            <div id="register-div" class="rounded shadow mt-4 py-3 px-2 mx-4">
+                <div class="col-6 d-flex justify-content-start px-2">
+                    <button type="submit" class="btn btn-outline-primary btn-sm me-2">ثبت</button>
+                    <a href="{% url 'courses:courses' %}" class="btn btn-outline-dark btn-sm mx-2"><i class="bi bi-mortarboard-fill me-1"></i>دوره ها</a>
+                    <a href="{% url 'users:students' %}" class="btn btn-outline-dark btn-sm mx-2"><i class="bi bi-people me-1"></i>دانش آموزان</a>
+                    <a href="{% url 'users:teachers' %}" class="btn btn-outline-dark btn-sm mx-2"><i class="bi bi-person-video3 me-1"></i>دبیران</a>
+                </div>
+                <div class="col-6 d-flex justify-content-end overflow-x-auto">
+                    <p class=" m-0">examonline.com/student/<span
+                            id="portal_url_p">{{ academy.url }}</span></p>
+                    <input type="hidden" id="portal_url_hide" value="">
+                </div>
+            </div>
+        </form>
+    </div>
+    <form method="post" action="{% url 'academy:add_img' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input id="file-upload" name="g_image" class="d-none" type="file" oninput="this.form.submit()"
+               accept="image/*"/>
+    </form>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'accounts/js/register.js' %}"></script>
+{% endblock %}

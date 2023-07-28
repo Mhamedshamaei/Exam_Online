@@ -1,0 +1,161 @@
+{% extends 'owner_dashboard.html' %}
+{% load static %}
+{% block title %}جزئیات دوره{% endblock %}
+{% block body %}
+    <div class="modal fade" id="teacherModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">دعوت از دبیران</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body row" style="height: 80vh;">
+                    <div class="col-7" style="height: 100%">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="جستوجو" aria-label="Username"
+                                   aria-describedby="basic-addon1" id="search-input">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+                        </div>
+                        <div style="width: 100%;height: 88%;overflow-y: scroll" class="border rounded px-3"
+                             id="teachers_div">
+                            <div class="text-center mt-4" id="teacher_load">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-5" style="height: 100%">
+                        <div style="width: 100%;height: 88%;overflow-y: scroll" class="border rounded px-3 py-3"
+                             id="small-teacher-div">
+                            <div class="alert alert-secondary" role="alert" id="not-now-alert-teacher">
+                                هنوز چیزی انتخاب نشده !
+                            </div>
+                        </div>
+                        <form method="post" action="{% url 'courses:teacher_invitation' course.id %}">
+                            {% csrf_token %}
+                            <input name="dic" value="" class="d-none" id="final_teacher_dic">
+                            <button type="submit" class="btn btn-outline-primary mt-3" style="width: 100%"
+                                    onclick="SetTeacherValue()">دعوت
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="studentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">دعوت از دانش آموزان</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body row" style="height: 80vh;">
+                    <div class="col-7" style="height: 100%">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="جستوجو" aria-label="Username"
+                                   aria-describedby="basic-addon1" id="search-input">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+                        </div>
+                        <div style="width: 100%;height: 88%;overflow-y: scroll" class="border rounded px-3"
+                             id="student_div">
+                            <div class="text-center mt-4" id="student_load">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-5" style="height: 100%">
+                        <div style="width: 100%;height: 88%;overflow-y: scroll" class="border rounded px-3 py-3"
+                             id="small-student-div">
+                            <div class="alert alert-secondary" role="alert" id="not-now-alert-student">
+                                هنوز چیزی انتخاب نشده !
+                            </div>
+                        </div>
+                        <form method="post" action="{% url 'courses:student_invitation' course.id %}">
+                            {% csrf_token %}
+                            <input name="dic" value="" class="d-none" id="final_student_dic">
+                            <button type="submit" class="btn btn-outline-primary mt-3" style="width: 100%"
+                                    onclick="SetStudentValue()">دعوت
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="bg-white rounded mt-4 shadow overflow-scroll" style="width: 94%;height: 600px">
+            <h3 class="text-center mt-3">{{ course.name }}</h3>
+            <div class="d-flex justify-content-end">
+                <a data-bs-toggle="modal" data-bs-target="#teacherModal"
+                   href="{% url 'courses:get_teachers' course.id %}"
+                   class="btn btn-outline-primary me-3" id="add_teacher"
+                   style="transform: translateY(-37px)">دعوت دبیر
+                </a>
+                <a data-bs-toggle="modal" data-bs-target="#studentModal"
+                   href="{% url 'courses:get_students' course.id %}"
+                   class="btn btn-outline-primary me-3" id="add_student"
+                   style="transform: translateY(-37px)">دانش آموز
+                </a>
+            </div>
+            {% if teachers %}
+                {% for t in teachers %}
+                    <div class="d-flex justify-content-center my-4">
+                        <div class=" row border shadow bg-warning-subtle rounded d-flex justify-content-start py-2"
+                             style="width: 92%;">
+                            <div class="col-1 ms-2">{{ forloop.counter }}</div>
+                            <div class="col-2">{{ t.teacher_profile.first_name }}</div>
+                            <div class="col-2">{{ t.teacher_profile.last_name }}</div>
+                            <div class="col-3">
+                                <i class="bi bi-telephone me-2"></i> {{ t.phone }}
+                            </div>
+                            <div class="col-3">
+                                <a href="{% url 'users:teacher_details' t.id %}"
+                                   class="btn btn-outline-primary btn-sm"><i
+                                        class="bi bi-person mx-2 "></i>پروفایل</a>
+                                <a href="{% url 'courses:teacher_delete' course.id t.id %}"
+                                   class="btn btn-outline-danger btn-sm mx-2"><i
+                                        class="bi bi-trash-fill me-2"></i>حذف</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-secondary" role="alert">
+                    دبیری یافت نشد
+                </div>
+            {% endif %}
+            {% if students %}
+                {% for s in students %}
+                    <div class="d-flex justify-content-center my-4">
+                        <div class=" row border shadow rounded d-flex justify-content-start py-2" style="width: 92%;">
+                            <div class="col-1 ms-2">{{ forloop.counter }}</div>
+                            <div class="col-2">{{ s.student_profile.first_name }}</div>
+                            <div class="col-2">{{ s.student_profile.last_name }}</div>
+                            <div class="col-3">
+                                <i class="bi bi-person-vcard me-2"></i>{{ s.national_code }}
+                            </div>
+                            <div class="col-3">
+                                <a href="{% url 'users:student_details' s.id %}" class="btn btn-outline-primary btn-sm"><i
+                                        class="bi bi-person mx-2 "></i>پروفایل</a>
+                                <a href="{% url 'courses:student_delete' course.id s.id %}"
+                                   class="btn btn-outline-danger btn-sm mx-2"><i
+                                        class="bi bi-trash-fill me-2"></i>حذف</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-secondary" role="alert">
+                    دانش آموزی یافت نشد
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'courses/js/details.js' %}"></script>
+{% endblock %}

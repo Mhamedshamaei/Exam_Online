@@ -1,0 +1,52 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block title %}ورود به پنل{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'students/css/login.css' %}">{% endblock %}
+{% block body %}
+    <div class="row" style="width: 100%;height: 100vh">
+        <div class="col-4">
+            <div class="my-3 shadow border rounded ms-4 d-flex flex-column" style="height: 95%">
+                <div style="width: 100%;" class="d-flex justify-content-center">
+                    <div class="rounded-circle bg-danger mt-5 mb-1 logo-div"
+                         style="background-image: url({{ academy.image.url }})">
+                    </div>
+                </div>
+                <h5 class="text-center">{{ academy.name }}</h5>
+                <form method="post" class="mt-3 px-5" action="{% url 'student:student_login' academy.id %}">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1"><i class="bi bi-person"></i></span>
+                        <input type="number" class="form-control text-center" placeholder="کد ملی"
+                               aria-label="Username" name="email_phone" required
+                               aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1"><i class="bi bi-key"></i></span>
+                        <input type="password" class="form-control text-center" placeholder="رمز عبور"
+                               aria-label="Username" name="password" required
+                               aria-describedby="basic-addon1">
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary" style="width: 100%">ورود</button>
+                    <a class="text-decoration-none"><p class="text-center mt-3 text-dark text-decoration-none">
+                        <i class="bi bi-person-video3 me-2"></i>پورتال ورود دانش آموزان</p></a>
+                </form>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="my-3 shadow border rounded overflow-hidden" style="height: 95%">
+                <div class="swiper mySwiper">
+                    <div class="swiper-wrapper">
+                        {% for image in images %}
+                            <div class="swiper-slide"><img src="{{ image.g_image.url }}" alt="{{ image.alt }}"></div>
+                        {% endfor %}
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'students/js/login.js' %}"></script>
+{% endblock %}

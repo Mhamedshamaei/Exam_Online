@@ -1,0 +1,64 @@
+{% extends 'owner_dashboard.html' %}
+{% load static %}
+{% block title %}تاریخجه پرداخت{% endblock %}
+{% block body %}
+    <div class="row d-flex justify-content-center">
+        <div class="bg-white rounded mt-4 shadow overflow-scroll" style="width: 94%;height: 90vh">
+            <h3 class="text-center mt-3" style="margin-bottom: 7vh">تاریخچه خرید</h3>
+            {% if total_exam %}
+                <div class="alert alert-warning" role="alert">
+                    شما {{ total_exam }} اشتراک فعال دیگر دارید
+                </div>
+            {% else %}
+                <div class="alert alert-warning" role="alert">
+                    شما اشتراک فعال ندارید ، لطفا برای خرید اشتراک به <a class="text-decoration-none text-primary"
+                                                                         href="{% url 'plans:plans' %}">این صفحه</a>
+                    مراجعه کنید
+                </div>
+            {% endif %}
+            {% if history %}
+                {% for h in history %}
+                    <div class="d-flex justify-content-center my-4">
+                        <div class=" row rounded d-flex justify-content-start py-2 shadow"
+                             style="width: 92%;border: skyblue 1px solid;">
+                            <div class="col-1 ms-2">{{ forloop.counter }}</div>
+                            {% if h.plan.name == 'ویژه' %}
+                                <div class="col-2"><i class="bi bi-rocket-takeoff me-1"></i>{{ h.plan.name }}</div>
+                            {% elif h.plan.name == 'مؤسسات' %}
+                                <div class="col-2"><i class="bi bi-airplane me-2"></i>{{ h.plan.name }}</div>
+                            {% else %}
+                                <div class="col-2"><i class="bi bi-send me-2"></i>{{ h.plan.name }}</div>
+                            {% endif %}
+                            <div class="col-2">
+                                <i class="bi bi-pen me-2"></i>{{ h.plan.exam_num }} آزمون
+                            </div>
+                            <div class="col-2">
+                                <i class="bi bi-wallet2 me-2"></i><span
+                                    id="price{{ forloop.counter }}">{{ h.price }}</span>
+                            </div>
+                            <div class="col-2">
+                                <i class="bi bi-calendar-date me-2"></i>{{ h.create.date }}
+                            </div>
+                            <div class="col-2">
+                                <i class="bi bi-alarm me-2"></i>{{ h.create.time }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-secondary" role="alert">
+                    تا کنون اشتراکی نخریده اید !
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        {% for h in history %}
+            price{{ forloop.counter }} = document.getElementById('price{{ forloop.counter }}')
+            num{{ forloop.counter }} = price{{ forloop.counter }}.innerText
+            price{{ forloop.counter }}.innerHTML = numeral(num{{ forloop.counter }}).format('0,0') + ' تومان'
+        {% endfor %}
+    </script>
+{% endblock %}
