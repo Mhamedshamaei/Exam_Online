@@ -1,1 +1,1 @@
-full website for manage academy
+full website for manage academy whit python django
